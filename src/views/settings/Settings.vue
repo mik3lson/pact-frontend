@@ -1,4 +1,4 @@
-page <!-- src/views/settings/Settings.vue -->
+ <!-- src/views/settings/Settings.vue -->
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

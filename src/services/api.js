@@ -41,7 +41,7 @@ api.defaults.adapter = async (config) => {
     }
 
     if (path === '/auth/register' && method === 'post') {
-      const { email, name, username, role, password } = data;
+      const { email, name, role, password } = data;
       const users = db.getUsers();
       
       if (users.some((u) => u.email === email)) {
@@ -55,7 +55,7 @@ api.defaults.adapter = async (config) => {
         email,
         password,
         name,
-        username,
+        username: name.toLowerCase().replace(/\s+/g, '_') + '_' + Math.random().toString(36).substr(2, 4),
         role, // 'freelancer' or 'client'
         title: role === 'freelancer' ? 'Freelance Specialist' : 'Business Owner',
         avatar: `https://images.unsplash.com/photo-${role === 'freelancer' ? '1472099645785-5658abf4ff4e' : '1580489944761-15a19d654956'}?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`,

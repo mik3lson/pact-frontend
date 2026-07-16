@@ -6,13 +6,12 @@ import { useAuthStore } from '../../stores/auth';
 import PactButton from '../../components/ui/PactButton.vue';
 import PactInput from '../../components/ui/PactInput.vue';
 import PactCard from '../../components/ui/PactCard.vue';
-import { ShieldCheck, Mail, Lock, User, AtSign } from '@lucide/vue';
+import { ShieldCheck, Mail, Lock, User } from '@lucide/vue';
 
 const authStore = useAuthStore();
 const router = useRouter();
 
 const name = ref('');
-const username = ref('');
 const email = ref('');
 const password = ref('');
 const role = ref('freelancer'); // Default
@@ -20,7 +19,7 @@ const localError = ref('');
 const loading = ref(false);
 
 const handleRegister = async () => {
-  if (!name.value || !username.value || !email.value || !password.value) {
+  if (!name.value || !email.value || !password.value) {
     localError.value = 'All fields are required.';
     return;
   }
@@ -29,7 +28,7 @@ const handleRegister = async () => {
   localError.value = '';
   
   try {
-    await authStore.register(name.value, username.value, email.value, role.value, password.value);
+    await authStore.register(name.value, email.value, role.value, password.value);
     router.push('/dashboard');
   } catch (err) {
     localError.value = err.response?.data?.message || 'Registration failed. Try again.';

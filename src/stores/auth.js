@@ -30,11 +30,11 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function register(name, username, email, role, password) {
+  async function register(name, email, role, password) {
     loading.value = true;
     error.value = null;
     try {
-      const res = await api.post('/auth/register', { name, username, email, role, password });
+      const res = await api.post('/auth/register', { name, email, role, password });
       user.value = res.data.user;
       token.value = res.data.token;
       localStorage.setItem('pact_token', res.data.token);
