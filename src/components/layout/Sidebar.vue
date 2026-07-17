@@ -45,7 +45,7 @@ const handleLogout = () => {
   <aside class="w-64 bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0 shrink-0 z-30">
     <!-- Brand Header -->
     <div class="h-20 border-b border-slate-100 flex items-center px-6">
-      <img src="/src/assets/images/pactlogogo.png" alt="Pact Logo" class="h-10 w-auto" />
+      <img src="/src/assets/images/pactlogo2.png" alt="Pact Logo" class="h-10 w-auto" />
     </div>
 
     <!-- Navigation Menu -->

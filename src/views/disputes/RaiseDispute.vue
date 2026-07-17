@@ -344,7 +344,7 @@ const formatDate = (dateStr) => {
             <p class="text-xs text-slate-500 mt-0.5">Step {{ currentStep }} of {{ totalSteps }}</p>
           </div>
         </div>
-        <PactButton variant="ghost" size="sm" @click="emit('close')">
+        <PactButton variant="ghost" size="sm" @click="emit('close')" class="!text-[#0C513F] hover:!bg-[#0C513F]/5">
           <ArrowLeft class="w-4 h-4" />
           Back to Disputes
         </PactButton>
@@ -726,7 +726,7 @@ const formatDate = (dateStr) => {
 
         <div class="bg-white rounded-2xl border border-slate-100 shadow-premium p-6 space-y-4">
           <div class="flex items-start gap-4">
-            <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#0C513F]/10 text-[#0C513F] flex items-center justify-center shrink-0">
               <span class="text-sm font-bold">1</span>
             </div>
             <div>
@@ -735,7 +735,7 @@ const formatDate = (dateStr) => {
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#0C513F]/10 text-[#0C513F] flex items-center justify-center shrink-0">
               <span class="text-sm font-bold">2</span>
             </div>
             <div>
@@ -744,7 +744,7 @@ const formatDate = (dateStr) => {
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#0C513F]/10 text-[#0C513F] flex items-center justify-center shrink-0">
               <span class="text-sm font-bold">3</span>
             </div>
             <div>
@@ -753,7 +753,7 @@ const formatDate = (dateStr) => {
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#0C513F]/10 text-[#0C513F] flex items-center justify-center shrink-0">
               <span class="text-sm font-bold">4</span>
             </div>
             <div>
@@ -827,6 +827,7 @@ const formatDate = (dateStr) => {
             size="md"
             @click="openConfirmModal"
             :disabled="!canSubmit"
+            class="!bg-[#0C513F] !border-[#0C513F] hover:!bg-[#0A3D2F]"
           >
             <Send class="w-4 h-4" />
             Submit Dispute

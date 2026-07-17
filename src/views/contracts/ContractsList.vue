@@ -171,7 +171,7 @@ const handleCreateContract = async () => {
       <PactButton 
         @click="showCreateModal = true" 
         variant="primary" 
-        class="self-start md:self-auto"
+        class="self-start md:self-auto !bg-[#0C513F] !border-[#0C513F] hover:!bg-[#0A3D2F]"
       >
         <FilePlus class="w-4 h-4" />
         New Contract Draft

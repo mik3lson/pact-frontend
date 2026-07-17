@@ -42,7 +42,7 @@ const handleRegister = async () => {
   <div class="w-full max-w-[460px] px-4 py-8">
     <!-- Header -->
     <div class="text-center mb-8">
-      <img src="/src/assets/images/pactlogogo.png" alt="Pact Logo" class="h-16 w-auto mx-auto mb-4" />
+      <img src="/src/assets/images/pactlogo2.png" alt="Pact Logo" class="h-16 w-auto mx-auto mb-4" />
       <h2 class="text-2xl font-bold tracking-tight text-slate-900">Create your Pact account</h2>
       <p class="text-sm text-slate-500 mt-1">Start working and transacting safely today</p>
     </div>

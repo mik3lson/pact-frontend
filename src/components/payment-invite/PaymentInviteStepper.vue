@@ -38,7 +38,7 @@ const getStepState = (step) => {
           <div
             class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-300"
             :class="{
-              'bg-brand-500 text-white shadow-sm shadow-brand-200': getStepState(step) === 'active',
+              'bg-[#0C513F] text-white shadow-sm': getStepState(step) === 'active',
               'bg-emerald-50 text-emerald-600 border border-emerald-200': getStepState(step) === 'completed',
               'bg-slate-50 text-slate-400 border border-slate-200': getStepState(step) === 'upcoming',
             }"

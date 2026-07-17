@@ -46,9 +46,9 @@ const fillDemo = () => {
   <div class="w-full max-w-[440px] px-4 py-8">
     <!-- Header -->
     <div class="text-center mb-8">
-      <img src="/src/assets/images/pactlogogo.png" alt="Pact Logo" class="h-16 w-auto mx-auto mb-4" />
+      <img src="/src/assets/images/pactlogo2.png" alt="Pact Logo" class="h-16 w-auto mx-auto mb-4" />
       <h2 class="text-2xl font-bold tracking-tight text-slate-900">Sign in to Pact</h2>
-      <p class="text-sm text-slate-500 mt-1">Escrow & invoicing for premium clients & creators</p>
+      <p class="text-sm text-slate-500 mt-1">Escrow & invoicing platform for freelancers</p>
     </div>
 
     <!-- Card Container -->

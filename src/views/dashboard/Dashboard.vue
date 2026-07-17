@@ -93,7 +93,7 @@ const getStatusBadge = (status) => {
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       
       <!-- Card 1: Amount in Escrow (Green) -->
-      <div class="bg-brand-500 rounded-[16px] p-4 shadow-sm">
+      <div class="bg-gradient-to-br from-[#0C513F] to-[#0A3D2F] rounded-[16px] p-4 shadow-sm">
         <div class="flex items-center justify-between mb-3">
           <span class="text-[10px] font-semibold text-white/80 uppercase tracking-wider">Amount in Escrow</span>
           <span class="p-1.5 rounded-lg bg-white/20 text-white">
@@ -152,7 +152,7 @@ const getStatusBadge = (status) => {
         </div>
         <button
           @click="router.push('/wallet')"
-          class="text-sm font-semibold text-brand-500 hover:text-brand-600 transition-colors cursor-pointer"
+          class="text-sm font-semibold text-[#0C513F] hover:text-[#0A3D2F] transition-colors cursor-pointer"
         >
           See all →
         </button>

@@ -81,7 +81,7 @@ const handleCreateAnother = () => {
       <div class="flex items-center justify-center gap-4">
         <button
           @click="handleCreateAnother"
-          class="px-6 py-2.5 border border-slate-200 bg-white text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-all duration-200 cursor-pointer"
+          class="px-6 py-2.5 border border-[#0C513F] bg-white text-[#0C513F] text-sm font-semibold rounded-xl hover:bg-[#0C513F]/5 transition-all duration-200 cursor-pointer"
         >
           Create Another
         </button>

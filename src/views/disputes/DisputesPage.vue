@@ -101,11 +101,11 @@ const handleBackToEscrow = () => {
           </p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
-          <PactButton variant="ghost" size="sm" @click="handleBackToEscrow">
+          <PactButton variant="ghost" size="sm" @click="handleBackToEscrow" class="!text-[#0C513F] hover:!bg-[#0C513F]/5">
             <ArrowLeft class="w-4 h-4" />
             Back to Escrow
           </PactButton>
-          <PactButton variant="primary" size="sm" @click="showRaiseForm = true">
+          <PactButton variant="primary" size="sm" @click="showRaiseForm = true" class="!bg-[#0C513F] !border-[#0C513F] hover:!bg-[#0A3D2F]">
             <Scale class="w-4 h-4" />
             Raise a Dispute
           </PactButton>
@@ -118,7 +118,7 @@ const handleBackToEscrow = () => {
         <div>
           <p class="text-sm font-bold text-amber-800">Disputes should be a last resort.</p>
           <p class="text-xs text-amber-700 mt-0.5">
-            We encourage both parties to communicate first. Once a dispute is opened, the escrow is frozen until a decision is reached.
+            We encourage both parties to resolve issues through direct communication first. If a dispute is opened, the escrowed funds are temporarily frozen until all submitted evidence is reviewed and a resolution is reached.
           </p>
         </div>
       </div>
