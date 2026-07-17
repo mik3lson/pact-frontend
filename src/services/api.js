@@ -776,6 +776,70 @@ api.defaults.adapter = async (config) => {
       return { status: 200, data: { transactions: filtered } };
     }
 
+    // Wallet Settlements
+    if (path === '/wallet/settlements' && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const transactions = db.getTransactions();
+      const withdrawals = transactions.filter(tx => tx.userId === userId && tx.type === 'Withdrawal')
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .map(tx => ({
+          id: tx.id,
+          date: tx.timestamp,
+          reference: 'STL-' + tx.id.split('_').pop().toUpperCase(),
+          destination: tx.description?.match(/\(([^)]+)\)/)?.[1] || 'Bank Account',
+          amount: tx.amount,
+          status: tx.status,
+          processingTime: '1-2 business days'
+        }));
+      return { status: 200, data: { settlements: withdrawals } };
+    }
+
+    // Wallet Escrow Movements
+    if (path === '/wallet/escrow-movements' && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const contracts = db.getContracts();
+      const userContracts = contracts.filter(c => c.clientId === userId || c.freelancerId === userId);
+      const users = db.getUsers();
+      const movements = userContracts.map(c => {
+        const isClient = c.clientId === userId;
+        const counterparty = users.find(u => u.id === (isClient ? c.freelancerId : c.clientId));
+        return {
+          id: 'em_' + c.id.split('_').pop(),
+          escrowId: 'ESC-' + c.id.split('_').pop().toUpperCase(),
+          project: c.title,
+          counterparty: counterparty?.name || 'Unknown',
+          amount: c.escrowAmount,
+          type: c.status === 'Released' ? 'Released' : c.status === 'Disputed' ? 'Disputed' : 'Funded',
+          date: c.createdAt,
+          status: c.status === 'Released' ? 'Completed' : c.status === 'Disputed' ? 'Disputed' : 'Active'
+        };
+      }).sort((a, b) => new Date(b.date) - new Date(a.date));
+      return { status: 200, data: { movements } };
+    }
+
+    // Wallet Payment Methods
+    if (path === '/wallet/payment-methods' && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const methods = [
+        { id: 'pm_visa', type: 'visa', nickname: 'Personal Visa', last4: '4532', expMonth: 8, expYear: 2027, isDefault: true },
+        { id: 'pm_mc', type: 'mastercard', nickname: 'Business Mastercard', last4: '8810', expMonth: 3, expYear: 2028, isDefault: false }
+      ];
+      return { status: 200, data: { methods } };
+    }
+
+    // Wallet Bank Account
+    if (path === '/wallet/bank-account' && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const account = {
+        id: 'ba_' + Math.random().toString(36).substr(2, 9),
+        bankName: 'Guaranty Trust Bank',
+        accountName: currentUser.name,
+        accountNumber: '0123456789',
+        status: 'Verified'
+      };
+      return { status: 200, data: { account } };
+    }
+
     // ----------------------------------------------------
     // NOTIFICATIONS
     // ----------------------------------------------------
@@ -805,6 +869,137 @@ api.defaults.adapter = async (config) => {
       });
       db.setNotifications(notifications);
       return { status: 200, data: { success: true } };
+    }
+
+    // ----------------------------------------------------
+    // DISPUTES
+    // ----------------------------------------------------
+    if (path === '/disputes' && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const disputes = db.getDisputes();
+      const filtered = disputes.filter(d => d.initiatorId === userId || d.respondentId === userId);
+      return { status: 200, data: { disputes: filtered } };
+    }
+
+    if (path === '/disputes' && method === 'post') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const disputes = db.getDisputes();
+      const users = db.getUsers();
+
+      // Find the escrow/contract
+      const contracts = db.getContracts();
+      const contract = contracts.find(c => c.id === data.escrowId);
+      
+      if (!contract) {
+        return Promise.reject({
+          response: { status: 404, data: { message: 'Escrow not found.' } }
+        });
+      }
+
+      // Determine respondent
+      const respondentId = contract.clientId === userId ? contract.freelancerId : contract.clientId;
+      const respondent = users.find(u => u.id === respondentId);
+
+      const newDispute = {
+        id: 'DSP-2026-' + String(Math.floor(100 + Math.random() * 900)).padStart(3, '0'),
+        escrowId: contract.id,
+        escrowTitle: contract.title,
+        escrowAmount: contract.escrowAmount,
+        invoiceNumber: data.invoiceNumber || null,
+        initiatorId: userId,
+        initiatorName: currentUser.name,
+        initiatorRole: data.initiatorRole || currentUser.role,
+        respondentId,
+        respondentName: respondent?.name || 'Unknown',
+        respondentRole: respondent?.role || 'unknown',
+        reason: data.reason,
+        reasonLabel: data.reasonLabel,
+        explanation: data.explanation,
+        desiredResolution: data.desiredResolution,
+        evidence: data.evidence || [],
+        status: 'Awaiting Counterparty Response',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        timeline: [
+          { event: 'Escrow Created', date: contract.createdAt },
+          { event: 'Escrow Funded', date: contract.createdAt },
+          { event: 'Work Started', date: contract.createdAt },
+          { event: 'Work Delivered', date: contract.createdAt },
+          { event: 'Dispute Opened', date: new Date().toISOString() },
+          { event: 'Under Review', date: null },
+          { event: 'Decision', date: null }
+        ]
+      };
+
+      // Update contract status to disputed
+      const contractIdx = contracts.findIndex(c => c.id === contract.id);
+      contracts[contractIdx].status = 'Disputed';
+      db.setContracts(contracts);
+
+      disputes.push(newDispute);
+      db.setDisputes(disputes);
+
+      // Notify respondent
+      const notifications = db.getNotifications();
+      notifications.push({
+        id: 'nt_' + Math.random().toString(36).substr(2, 9),
+        userId: respondentId,
+        title: '⚠️ Dispute Opened',
+        message: `${currentUser.name} has opened a dispute on "${contract.title}". The escrow has been frozen pending review.`,
+        type: 'danger',
+        read: false,
+        timestamp: new Date().toISOString(),
+        actionUrl: `/disputes/${newDispute.id}`
+      });
+      db.setNotifications(notifications);
+
+      return { status: 201, data: { dispute: newDispute } };
+    }
+
+    if (path.match(/\/disputes\/[a-zA-Z0-9_-]+$/) && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const id = path.split('/').pop();
+      const disputes = db.getDisputes();
+      const dispute = disputes.find(d => d.id === id);
+      if (!dispute) {
+        return Promise.reject({ response: { status: 404, data: { message: 'Dispute not found.' } } });
+      }
+      return { status: 200, data: { dispute } };
+    }
+
+    if (path === '/disputes/eligible-escrows' && method === 'get') {
+      if (!currentUser) return Promise.reject({ response: { status: 401 } });
+      const contracts = db.getContracts();
+      const disputes = db.getDisputes();
+      const disputedContractIds = disputes.map(d => d.escrowId);
+      
+      // Eligible: contracts where user is involved, not already disputed, and has some funding
+      const eligible = contracts.filter(c => 
+        (c.clientId === userId || c.freelancerId === userId) &&
+        !disputedContractIds.includes(c.id) &&
+        c.status !== 'Draft' &&
+        c.status !== 'Released'
+      );
+
+      const users = db.getUsers();
+      const escrows = eligible.map(c => {
+        const counterpartyId = c.clientId === userId ? c.freelancerId : c.clientId;
+        const counterparty = users.find(u => u.id === counterpartyId);
+        return {
+          id: c.id,
+          title: c.title,
+          escrowId: 'ESC-' + c.id.split('_').pop().toUpperCase(),
+          counterpartyName: counterparty?.name || 'Unknown',
+          counterpartyRole: c.clientId === userId ? 'Freelancer' : 'Client',
+          amount: c.escrowAmount,
+          status: c.status,
+          createdAt: c.createdAt,
+          dueDate: c.dueDate,
+          invoiceNumber: c.invoiceNumber || null
+        };
+      });
+
+      return { status: 200, data: { escrows } };
     }
 
     // Unmatched mock endpoint

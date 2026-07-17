@@ -4,6 +4,7 @@ const KEY_USERS = 'pact_users';
 const KEY_CONTRACTS = 'pact_contracts';
 const KEY_INVOICES = 'pact_invoices';
 const KEY_TRANSACTIONS = 'pact_transactions';
+const KEY_DISPUTES = 'pact_disputes';
 const KEY_NOTIFICATIONS = 'pact_notifications';
 const KEY_WALLET = 'pact_wallet';
 const KEY_CURRENT_USER = 'pact_current_user';
@@ -15,6 +16,8 @@ const INITIAL_CONTRACTS = [];
 const INITIAL_INVOICES = [];
 
 const INITIAL_TRANSACTIONS = [];
+
+const INITIAL_DISPUTES = [];
 
 const INITIAL_NOTIFICATIONS = [];
 
@@ -33,6 +36,9 @@ export function initDb() {
   }
   if (!localStorage.getItem(KEY_TRANSACTIONS)) {
     localStorage.setItem(KEY_TRANSACTIONS, JSON.stringify(INITIAL_TRANSACTIONS));
+  }
+  if (!localStorage.getItem(KEY_DISPUTES)) {
+    localStorage.setItem(KEY_DISPUTES, JSON.stringify(INITIAL_DISPUTES));
   }
   if (!localStorage.getItem(KEY_NOTIFICATIONS)) {
     localStorage.setItem(KEY_NOTIFICATIONS, JSON.stringify(INITIAL_NOTIFICATIONS));
@@ -68,6 +74,9 @@ export const db = {
   getTransactions: () => getData(KEY_TRANSACTIONS),
   setTransactions: (transactions) => setData(KEY_TRANSACTIONS, transactions),
   
+  getDisputes: () => getData(KEY_DISPUTES),
+  setDisputes: (disputes) => setData(KEY_DISPUTES, disputes),
+
   getNotifications: () => getData(KEY_NOTIFICATIONS),
   setNotifications: (notifications) => setData(KEY_NOTIFICATIONS, notifications),
   

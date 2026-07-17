@@ -32,7 +32,7 @@ const menuItems = [
 
 const bottomMenuItems = [
   { name: 'Notifications', path: '/notifications', icon: Bell },
-  { name: 'Disputes', path: '/disputes', icon: ShieldAlert },
+  { name: 'Dispute Resolution', path: '/disputes', icon: ShieldAlert },
 ];
 
 const handleLogout = () => {
